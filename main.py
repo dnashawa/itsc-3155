@@ -1,4 +1,4 @@
-### Data ###
+# Data #
 
 recipes = {
     "small": {
@@ -53,6 +53,35 @@ class SandwichMachine:
     def process_coins(self):
         """Returns the total calculated from coins inserted.
            Hint: include input() function here, e.g. input("how many quarters?: ")"""
+        paymentVal = 0
+        moneyType = input("How will you be paying? (($1)dollar/($0.50)half dollar/($0.25)quarter/($0.05)nickel)\n")
+        loopNum = 0
+
+        while paymentVal < balanceDue:
+
+            if loopNum != 0:
+                print(f"Current balance: ${paymentVal} \nTotal Cost: ${balanceDue}")
+                moneyType = input(
+                    "Balance not met, what else will you insert? (dollar/half dollar/quarter/nickel/nothing)\n")
+
+            if moneyType == "dollar":
+                paymentVal += 1
+            elif moneyType == "half dollar":
+                paymentVal += 0.50
+            elif moneyType == "quarter":
+                paymentVal += 0.25
+            elif moneyType == "nickel":
+                paymentVal += 0.05
+            elif moneyType == "nothing":
+                print("Not enough money!")
+                paymentVal = 0
+                break
+            else:
+                print("Invalid monetary type! Try again!")
+                break
+            loopNum += 1
+        if paymentVal > balanceDue:
+            print(f"Change received: ${paymentVal - balanceDue}")
 
     def transaction_result(self, coins, cost):
         """Return True when the payment is accepted, or False if money is insufficient.
@@ -70,57 +99,49 @@ class SandwichMachine:
 
 # Make an instance of SandwichMachine class and write the rest of the codes #
 
-
-sm = SandwichMachine(resources)
+keepRunning = True
 print("\nWelcome to Dylan Nashawaty's sandwich shop!")
-resVal = input("What would you like? (small/medium/large/off/report)\n")
-balanceDue = sm.machine_resources
 
+while keepRunning:
 
-if resVal.lower().strip() == "small":
-    sm.make_sandwich("small", sm.machine_resources)
-    balanceDue = 5.50
+    sm = SandwichMachine(resources)
+    resVal = input("What would you like? (small/medium/large/off/report)\n")
 
-elif resVal.lower().strip() == "medium":
-    sm.make_sandwich("medium", sm.machine_resources)
-    balanceDue = 6.50
+    if resVal.lower().strip() == "small":
+        sm.make_sandwich("small", sm.machine_resources)
+        balanceDue = 1.75
 
-elif resVal.lower().strip() == "large":
-    sm.make_sandwich("large", sm.machine_resources)
-    balanceDue = 7.50
+    elif resVal.lower().strip() == "medium":
+        sm.make_sandwich("medium", sm.machine_resources)
+        balanceDue = 3.25
 
-elif resVal.lower().strip() == "off":
-    print("Exiting System...")
-    exit(0)
+    elif resVal.lower().strip() == "large":
+        sm.make_sandwich("large", sm.machine_resources)
+        balanceDue = 5.5
 
-elif resVal.lower().strip() == "report":
-    print(sm.machine_resources)
-    input("Press a key to close report")
-    exit(0)
+    elif resVal.lower().strip() == "off":
+        print("Exiting System...")
+        exit(0)
 
-else:
-    print("Error taking input")
-    exit(0)
+    elif resVal.lower().strip() == "report":
+        breadVal = sm.machine_resources["bread"]
+        hamVal = sm.machine_resources["ham"]
+        cheeseVal = sm.machine_resources["cheese"]
+        print(f"Bread Remaining: {breadVal} slices")
+        print(f"Ham Remaining: {hamVal} slices")
+        print(f"Cheese Remaining: {cheeseVal} ounces")
+        nullVar = input("Press a key to close report")
+        exit(0)
 
-paymentVal = 0.00
-
-moneyType = input("How will you be paying? (large dollar/half dollar/quarter/nickel)\n")
-loopNum = 0
-
-while paymentVal < balanceDue:
-     
-    if loopNum != 0:
-        print(f"Current balance: ${paymentVal} \nTotal Cost: ${balanceDue}")
-        moneyType = input("Balance not met, what else will you insert? (large dollar/half dollar/quarter/nickel)")
-
-    if moneyType == "large dollar":
-        paymentVal += 1.00
-    elif moneyType == "half dollar":
-        paymentVal += 0.50
-    elif moneyType == "quarter":
-        paymentVal += 0.25
-    elif moneyType == "nickel":
-        paymentVal += 0.05
     else:
-        print("Invalid monetary type!")
-    loopNum += 1
+        print("Error taking input")
+        exit(0)
+    sm.process_coins()
+    print(f"{resVal} sandwich purchased!")
+
+    repeatCheck = input("\nDo you want to input another action? Enter yes or no")
+    if repeatCheck == "no":
+        keepRunning = False
+        exit(0)
+    else:
+        keepRunning = True
